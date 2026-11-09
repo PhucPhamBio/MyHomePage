@@ -1,21 +1,9 @@
 ---
-import BaseLayout from "../layouts/BaseLayout.astro";
+import Base from '../layouts/Base.astro';
 ---
-<BaseLayout title="About | Phuc Pham" active="About">
-  <section class="page-intro">
-    <div class="eyebrow">About</div>
-    <h1>About this blog</h1>
-    <p class="hero-copy">A space for documenting research, learning, and ideas in computational biology and AI.</p>
-  </section>
-  <section class="content">
-    <h2>About the author</h2>
-    <p>I'm Phuc, a PhD student interested in computational biology, machine learning, and AI for science.</p>
-    <p>This website is a living notebook: a place to explain concepts, record research perspectives, and share technical lessons.</p>
-    <h2>Contact & profiles</h2>
-    <ul>
-      <li><a href="https://github.com/PhucPhamBio">GitHub</a></li>
-      <li><a href="https://orcid.org/0009-0001-0193-6295">ORCID</a></li>
-      <li><a href="mailto:YOUR_EMAIL@example.com">Email</a> (replace this address before publishing)</li>
-    </ul>
-  </section>
-</BaseLayout>
+<Base title="About · Phuc / Field Notes"><section class="shell about"><div><span class="eyebrow">About me</span><h1 class="serif">My research and Contact</h1></div><div class="copy"><p class="lead">
+Phuc Pham is a PhD student whose research combines mathematics, algorithms, machine learning, and molecular and cellular biology. He develops computational methods for modeling proteins, gene regulatory processes, and cellular dynamics using genomic, epigenomic, spatial omics, and imaging data. His methodological interests include graph machine learning, probabilistic modeling, multimodal data integration, and dynamical systems. His long-term research vision is to build a predictive and interpretable virtual cell that connects molecular mechanisms with cellular phenotypes and responses to perturbations.
+</p><h2>My interests: </h2><ul><li>Computational biology and Bioinformatics</li><li>Virtual Cell Models</li>
+  <li>Digital Twins and Precision Medicine</li>
+  <li>Science, Culture, and Intellectual History</li>
+  <li>Karatedo</li><li>Beautiful things ...</li></ul><a class="orcid-link" href="https://orcid.org/0009-0001-0193-6295" target="_blank" rel="me noopener noreferrer"><span class="orcid-mark" aria-hidden="true">iD</span><span>View my research on ORCID</span><span aria-hidden="true">↗</span></a><p class="about-invite">If you share similar interests and would like to collaborate on exciting projects, I would love to hear from you. Please contact me at <a href="mailto:phpham@uab.edu">phpham@uab.edu</a>.</p></div></section></Base><style>.about{display:grid;grid-template-columns:1fr 1fr;gap:5rem;padding:6rem 0}.about h1{font-size:clamp(4rem,8vw,8rem);line-height:.85;margin-top:2rem}.copy{padding-top:8rem}.lead{font:2rem/1.2 Newsreader}.copy p:not(.lead),li{color:var(--muted)}.orcid-link{display:inline-flex;align-items:center;gap:.65rem;margin:.75rem 0 1.25rem;padding:.45rem .7rem .45rem .45rem;border:1px solid var(--line);border-radius:999px;font-size:.88rem;font-weight:700;transition:border-color .2s,background .2s}.orcid-link:hover{border-color:var(--lime);background:color-mix(in srgb,var(--lime) 10%,transparent)}.orcid-link:focus-visible,.about-invite a:focus-visible{outline:2px solid var(--blue);outline-offset:3px}.orcid-mark{display:grid;place-items:center;width:1.7rem;height:1.7rem;border-radius:50%;background:#a6ce39;color:#fff;font-size:.9rem;font-weight:700;letter-spacing:-.08em}.about-invite{color:var(--about-invite)!important}.about-invite a{color:var(--ink);text-decoration:underline;text-decoration-color:var(--about-invite);text-underline-offset:3px}@media(max-width:750px){.about{grid-template-columns:1fr}.copy{padding-top:0}}</style>

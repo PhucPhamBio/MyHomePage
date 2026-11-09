@@ -1,0 +1,47 @@
+---
+const base = import.meta.env.BASE_URL;
+const link = (path='') => `${base}${path}`.replace(/\/+/g,'/');
+---
+<header class="header">
+  <a class="skip" href="#content">Skip to content</a>
+  <div class="shell top"><a class="brand" href={link()}><span>PHUC PHAM</span><b></b></a><div class="issue mono">BIOLOGICAL INTELLIGENCE</div></div>
+  <div class="shell navwrap"><nav aria-label="Primary"><a href={link('blog/')}>Essays</a><a href={link('topics/computational-biology/')}>Computational Biology</a><a href={link('topics/other/')}>Other Topics</a><a href={link('about/')}>About</a></nav><button id="theme" type="button" aria-label="Switch to light mode" aria-pressed="false"><span aria-hidden="true">☼</span><span class="theme-label">Light mode</span></button></div>
+</header>
+<script is:inline>
+  const applyTheme=(theme)=>{
+    const light=theme==='light';
+    document.body.classList.toggle('light',light);
+    document.documentElement.classList.remove('light-start');
+    const button=document.querySelector('#theme');
+    button?.setAttribute('aria-pressed',String(light));
+    button?.setAttribute('aria-label',light?'Switch to dark mode':'Switch to light mode');
+    const label=button?.querySelector('.theme-label');
+    if(label) label.textContent=light?'Dark mode':'Light mode';
+  };
+  const getSavedTheme=()=>{
+    try {
+      return localStorage.getItem('theme')==='light'?'light':'dark';
+    } catch(error) {
+      console.error('Unable to read the saved theme preference.',error);
+      return 'dark';
+    }
+  };
+  applyTheme(getSavedTheme());
+  if(!document.documentElement.dataset.themeController) {
+    document.documentElement.dataset.themeController='true';
+    document.addEventListener('click',event=>{
+      if(!(event.target instanceof Element)||!event.target.closest('#theme')) return;
+      const theme=document.body.classList.contains('light')?'dark':'light';
+      applyTheme(theme);
+      try {
+        localStorage.setItem('theme',theme);
+      } catch(error) {
+        console.error('Unable to save the theme preference.',error);
+      }
+    });
+    document.addEventListener('astro:page-load',()=>applyTheme(getSavedTheme()));
+  }
+</script>
+<style>
+.header{border-bottom:1px solid var(--ink)}.top{height:88px;display:flex;align-items:center;justify-content:space-between}.brand{font-size:1.2rem;font-weight:800;letter-spacing:-.04em}.brand span{background:#123c78;color:#fff;padding:.25rem .4rem}.brand b{margin-left:.4rem}.issue{font-size:.7rem}.navwrap{display:flex;align-items:center;justify-content:space-between;border-top:1px solid var(--line);height:47px}nav{display:flex;gap:2rem;font-size:.78rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em}nav a:hover{text-decoration:underline;text-underline-offset:5px}button{border:1px solid var(--line);border-radius:999px;background:color-mix(in srgb,var(--paper) 80%,transparent);color:var(--ink);padding:.35rem .7rem;display:flex;align-items:center;gap:.4rem;font:600 .72rem Manrope,system-ui,sans-serif;cursor:pointer;transition:background .2s,color .2s}button:hover{background:var(--ink);color:var(--paper)}button span[aria-hidden]{font-size:1rem}.theme-label{white-space:nowrap}@media(max-width:720px){.issue{display:none}.top{height:70px}nav{gap:1rem;overflow:auto;font-size:.68rem}.navwrap{height:52px}.brand{font-size:1rem}}
+</style>

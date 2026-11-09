@@ -1,0 +1,16 @@
+---
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import MusicPlayer from '../components/MusicPlayer.astro';
+import { ClientRouter } from 'astro:transitions';
+import '../styles/global.css';
+const { title='Phuc Pham', description='An independent magazine about biological intelligence, medicine, nations, and martial arts.' } = Astro.props;
+const canonical = Astro.site ? new URL(Astro.url.pathname, Astro.site) : undefined;
+---
+<!doctype html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width"><meta name="description" content={description}><meta name="generator" content={Astro.generator}>{canonical && <link rel="canonical" href={canonical}/>}<meta property="og:title" content={title}><meta property="og:description" content={description}><meta property="og:type" content="website"><title>{title}</title><script is:inline>
+  try {
+    if (localStorage.getItem('theme') === 'light') document.documentElement.classList.add('light-start');
+  } catch (error) {
+    console.error('Unable to read the saved theme preference.', error);
+  }
+</script><style is:inline>html.light-start{color-scheme:light;--ink:#242720;--paper:#f6f4ed;--lime:#a4b879;--muted:#62645c;--line:#d6d3c9;--blue:#496985;--red:#a95648;--orb-mid:#c5d2c3;--orb-deep:#657f8b;--about-invite:#586957}</style><ClientRouter /></head><body><div class="site-backdrop" aria-hidden="true"></div><Header/><main id="content"><slot/></main><Footer/><MusicPlayer/></body></html>

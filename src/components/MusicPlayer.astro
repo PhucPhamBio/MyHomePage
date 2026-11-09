@@ -1,0 +1,74 @@
+<aside class="music-player" aria-label="Chopin music player" transition:persist="chopin-player">
+  <div class="track">
+    <span class="music-note" aria-hidden="true">♫</span>
+    <div>
+      <p class="track-title">Chopin · Nocturne Op. 9 No. 2</p>
+      <a href="https://commons.wikimedia.org/wiki/File:Nocturne_Op._9_no._2_in_E_flat_major.mp3">Wikimedia Commons · CC0</a>
+      <p class="playback-hint" hidden>Trình duyệt đã chặn tự phát. Nhấn Play để nghe.</p>
+    </div>
+  </div>
+  <audio controls autoplay preload="none" aria-label="Play Chopin, Nocturne Op. 9 No. 2">
+    <source src="https://upload.wikimedia.org/wikipedia/commons/5/50/Nocturne_Op._9_no._2_in_E_flat_major.mp3" type="audio/mpeg" />
+    Your browser does not support audio playback.
+  </audio>
+</aside>
+
+<script is:inline>
+  const player=document.querySelector('.music-player');
+  const audio=player?.querySelector('audio');
+  const hint=player?.querySelector('.playback-hint');
+  const title=player?.querySelector('.track-title');
+  const sourceLink=player?.querySelector('.track a');
+  const tracks=[
+    {
+      title:'Chopin · Nocturne Op. 9 No. 2',
+      src:'https://upload.wikimedia.org/wikipedia/commons/5/50/Nocturne_Op._9_no._2_in_E_flat_major.mp3',
+      page:'https://commons.wikimedia.org/wiki/File:Nocturne_Op._9_no._2_in_E_flat_major.mp3'
+    },
+    {
+      title:'Chopin · Nocturne Op. 9 No. 1',
+      src:'https://upload.wikimedia.org/wikipedia/commons/b/b0/NocturneOp.9No.1InBFlatMinor.mp3',
+      page:'https://commons.wikimedia.org/wiki/File:NocturneOp.9No.1InBFlatMinor.mp3'
+    },
+    {
+      title:'Chopin · Nocturne Op. 27 No. 2',
+      src:'https://upload.wikimedia.org/wikipedia/commons/3/3f/NocturneOp27No2.mp3',
+      page:'https://commons.wikimedia.org/wiki/File:NocturneOp27No2.mp3'
+    }
+  ];
+  let currentTrack=0;
+  const playAudio=()=>{
+    audio?.play().catch(error=>{
+      if(error.name==='NotAllowedError') {
+        if(hint) hint.hidden=false;
+        return;
+      }
+      console.error('Unable to play the Chopin recording.',error);
+    });
+  };
+  if(audio instanceof HTMLAudioElement) {
+    audio.addEventListener('ended',()=>{
+      currentTrack=(currentTrack+1)%tracks.length;
+      const nextTrack=tracks[currentTrack];
+      if(title) title.textContent=nextTrack.title;
+      if(sourceLink) sourceLink.href=nextTrack.page;
+      audio.setAttribute('aria-label',`Play ${nextTrack.title.replace('Chopin · ','')}`);
+      audio.src=nextTrack.src;
+      audio.load();
+      playAudio();
+    });
+    audio.addEventListener('play',()=>{if(hint) hint.hidden=true;});
+    playAudio();
+  }
+</script>
+
+<style>
+  .music-player{position:fixed;right:1rem;bottom:1rem;z-index:20;width:min(330px,calc(100vw - 2rem));padding:.85rem 1rem;border:1px solid var(--line);border-radius:14px;background:color-mix(in srgb,var(--paper) 94%,transparent);color:var(--ink);box-shadow:0 12px 36px #0003;backdrop-filter:blur(14px)}
+  .track{display:flex;align-items:center;gap:.7rem;margin-bottom:.6rem}
+  .music-note{font-size:1.5rem;color:var(--blue)}
+  .track-title{margin:0;font-size:.8rem;font-weight:700}
+  .track a{font-size:.65rem;color:var(--muted);text-decoration:underline;text-underline-offset:2px}
+  .playback-hint{margin:.25rem 0 0;font-size:.65rem;color:var(--muted)}
+  audio{display:block;width:100%;height:36px}
+  @media(max-width:500px){.music-player{right:.75rem;bottom:.75rem;width:min(310px,calc(100vw - 1.5rem));padding:.7rem .8rem}}
+</style>

@@ -1,87 +1,77 @@
-# Academic Research Blog
+# Phuc / Field Notes
 
-A free, static academic/research blog starter built with Astro.
+Website blog Astro theo phong cách premium academic magazine: giao thoa giữa tạp chí khoa học, editorial AI và portfolio researcher.
 
-## Requirements
+## 1. Chạy trên máy
 
-- Node.js (current LTS recommended)
-- npm
-- Git
-
-## Run locally
+Yêu cầu: Node.js LTS và Git.
 
 ```bash
 npm install
 npm run dev
 ```
 
-Open the local URL printed by Astro (normally http://localhost:4321).
+Mở địa chỉ Astro in ra trong terminal, thường là `http://localhost:4321`.
 
-## Build
+Kiểm tra bản production:
 
 ```bash
 npm run build
 npm run preview
 ```
 
-The production site is generated in `dist/`.
+## 2. Tùy biến nhanh
 
-## Write a post
+- Tên và menu: `src/components/Header.astro`
+- Tiểu sử và liên kết: `src/pages/about.astro` và `src/components/Footer.astro`
+- Màu, font, kích thước, GIF nền và nút đổi theme (lưu lựa chọn trên trình duyệt): `src/styles/global.css`, `src/components/Header.astro`
+- Nền tối dùng GIF [GIPHY OK5LK5zLFfdm](https://giphy.com/gifs/wallpaper-OK5LK5zLFfdm), có ghi nguồn ở footer. Nền sáng dùng gradient màu sáng như trước.
+- Trình phát Chopin tự chuyển vòng giữa các bản Nocturne Op. 9 No. 2, Op. 9 No. 1 và Op. 27 No. 2 từ Wikimedia Commons (CC0), tự phát nếu trình duyệt cho phép và tiếp tục phát khi chuyển trang trong site.
+- Trang chủ: `src/pages/index.astro`
+- Bài mẫu: `src/content/blog/*.md`
 
-Create a Markdown or MDX file in `src/content/blog/`.
+Để viết bài mới, sao chép một file Markdown trong `src/content/blog/`, đổi tên file và chỉnh frontmatter. Các category hợp lệ:
 
-Example frontmatter:
+- Computational Biology
+- Bioinformatics
+- Virtual Cell
+- Precision Medicine
+- America
+- China
+- Karate
 
-```yaml
----
-title: "My Research Note"
-description: "A short summary."
-pubDate: 2026-11-08
-tags:
-  - Bioinformatics
-  - Machine Learning
-draft: false
----
-```
+Trang chủ và menu ưu tiên Computational Biology; các bài America, China và Karate được nhóm dưới mục Other.
 
-Set `draft: true` to keep a post out of the public site.
+## 3. Đưa lên GitHub Pages
 
-## Edit your profile
-
-Before publishing, update:
-- `src/pages/about.astro` (bio and email)
-- `src/pages/publications.astro` (real citation details and links)
-- `src/layouts/BaseLayout.astro` (site title if desired)
-- `src/pages/index.astro` (research interests and tagline)
-
-## Deploy free with Cloudflare Pages
-
-1. Push this project to a GitHub repository.
-2. In Cloudflare Dashboard, open **Workers & Pages**.
-3. Create a Pages project and connect the GitHub repository.
-4. Set:
-   - Framework preset: Astro
-   - Build command: `npm run build`
-   - Build output directory: `dist`
-5. Deploy. Cloudflare will provide a `*.pages.dev` address.
-6. Future pushes to the production branch trigger a new deployment.
-
-## Git commands
+1. Tạo repository mới trên GitHub, ví dụ `field-notes`.
+2. Giải nén project, mở terminal trong thư mục project.
+3. Chạy:
 
 ```bash
 git init
 git add .
-git commit -m "Initial academic blog"
+git commit -m "Launch academic magazine"
 git branch -M main
-git remote add origin https://github.com/YOUR_USERNAME/YOUR_REPOSITORY.git
+git remote add origin https://github.com/YOUR_USERNAME/field-notes.git
 git push -u origin main
 ```
 
-If the repository already exists and has a remote, do not run `git remote add origin` again.
-Check it with `git remote -v`.
+4. Trên GitHub mở `Settings` > `Pages`.
+5. Ở `Build and deployment`, chọn `Source: GitHub Actions`.
+6. Workflow `.github/workflows/deploy.yml` sẽ tự build và deploy.
+7. Website project thường có địa chỉ `https://YOUR_USERNAME.github.io/field-notes/`.
 
-## Notes
+File `astro.config.mjs` tự nhận tên repository trong GitHub Actions, nên internal link hoạt động cho cả user site và project site.
 
-- This is a static website: no server or database is required.
-- Public website assets (HTML/CSS/JS) can be inspected by visitors. Do not put secrets or API keys in this project.
-- Replace placeholder publication details and email before launch.
+## 4. Dùng domain riêng
+
+Thêm domain tại `Settings` > `Pages` > `Custom domain`, sau đó đổi `site` trong `astro.config.mjs` thành domain thật và giữ `base: '/'`.
+
+## 5. Việc nên sửa trước khi public
+
+- Thay email `hello@example.com`.
+- Thay liên kết GitHub, thêm ORCID và Google Scholar.
+- Viết lại phần About.
+- Xóa hoặc chỉnh năm/bài mẫu.
+- Thêm ảnh Open Graph riêng nếu muốn chia sẻ đẹp trên mạng xã hội.
