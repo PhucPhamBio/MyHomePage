@@ -1,0 +1,50 @@
+---
+import "../styles/global.css";
+
+interface Props {
+  title?: string;
+  description?: string;
+  active?: string;
+}
+const {
+  title = "Phuc Pham | Academic Blog",
+  description = "Research notes on computational biology, machine learning, and AI for science.",
+  active = "",
+} = Astro.props;
+const navItems = [
+  { label: "Home", href: "/", key: "Home" },
+  { label: "Research", href: "/research/", key: "Research" },
+  { label: "Publications", href: "/publications/", key: "Publications" },
+  { label: "Blog", href: "/blog/", key: "Blog" },
+  { label: "About", href: "/about/", key: "About" },
+];
+---
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content={description} />
+    <meta name="theme-color" content="#fbfaf7" />
+    <title>{title}</title>
+  </head>
+  <body>
+    <div class="site-shell">
+      <header class="site-header">
+        <a class="brand" href="/">Phuc Pham<span aria-hidden="true">.</span></a>
+        <nav class="nav" aria-label="Main navigation">
+          {navItems.map((item) => (
+            <a href={item.href} aria-current={active === item.key ? "page" : undefined}>{item.label}</a>
+          ))}
+        </nav>
+      </header>
+      <main>
+        <slot />
+      </main>
+      <footer class="site-footer">
+        <div>© {new Date().getFullYear()} Phuc Pham · Built with Astro.</div>
+        <div>Research, ideas, and notes in computational biology and AI.</div>
+      </footer>
+    </div>
+  </body>
+</html>

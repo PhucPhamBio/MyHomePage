@@ -1,0 +1,48 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import PostCard from "../components/PostCard.astro";
+import { getCollection } from "astro:content";
+
+const posts = (await getCollection("blog", ({ data }) => !data.draft))
+  .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf())
+  .slice(0, 3);
+---
+<BaseLayout active="Home">
+  <section class="hero">
+    <div class="eyebrow">Academic · Research · Learning</div>
+    <h1>Thinking about biology through AI.</h1>
+    <p class="hero-copy">
+      Research notes, scientific ideas, and learning reflections at the intersection
+      of computational biology, machine learning, and artificial intelligence.
+    </p>
+    <p class="meta">PhD Student · Computational Biology · AI for Science</p>
+  </section>
+
+  <section class="section">
+    <div class="section-heading"><h2>Research interests</h2></div>
+    <ul class="interest-list">
+      <li>Virtual Cell</li><li>Multi-omics</li><li>Agentic AI</li>
+      <li>Machine Learning</li><li>Drug Discovery</li><li>Scientific Computing</li>
+    </ul>
+  </section>
+
+  <section class="section">
+    <div class="section-heading">
+      <h2>Latest writing</h2>
+      <a href="/blog/">All posts →</a>
+    </div>
+    {posts.length > 0 ? (
+      <div class="post-list">
+        {posts.map((post) => (
+          <PostCard
+            title={post.data.title}
+            description={post.data.description}
+            date={post.data.pubDate}
+            href={`/blog/${post.id}/`}
+            tags={post.data.tags}
+          />
+        ))}
+      </div>
+    ) : <p class="meta">Your published posts will appear here.</p>}
+  </section>
+</BaseLayout>
