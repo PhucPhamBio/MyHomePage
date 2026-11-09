@@ -52,7 +52,7 @@ const tracks = [
   }
 ];
 ---
-<aside class="music-player" aria-label="Frédéric Chopin playlist" transition:persist="chopin-playlist">
+<aside class="music-player" data-home-path={import.meta.env.BASE_URL} aria-label="Frédéric Chopin playlist" transition:persist="chopin-playlist">
   <div class="track">
     <span class="music-note" aria-hidden="true">♫</span>
     <div class="track-info">
@@ -87,22 +87,57 @@ const tracks = [
     let lastScrollY=window.scrollY;
     let directionDistance=0;
     let scrollDirection=0;
+    let upwardGestures=0;
+    let countedCurrentUpwardGesture=false;
+    const isHomePage=()=>{
+      const homePath=player.dataset.homePath?.replace(/\/+$/,'') ?? '';
+      return window.location.pathname.replace(/\/+$/,'')===homePath;
+    };
+    const resetScrollState=()=>{
+      lastScrollY=window.scrollY;
+      directionDistance=0;
+      scrollDirection=0;
+      upwardGestures=0;
+      countedCurrentUpwardGesture=false;
+      player.classList.remove('is-compact');
+    };
     window.addEventListener('scroll',()=>{
       const currentScrollY=window.scrollY;
       const delta=currentScrollY-lastScrollY;
       lastScrollY=currentScrollY;
-      if(currentScrollY<=40) {
+      if(isHomePage() && currentScrollY<=40) {
         directionDistance=0;
+        upwardGestures=0;
+        countedCurrentUpwardGesture=false;
         player.classList.remove('is-compact');
         return;
       }
       const nextDirection=Math.sign(delta);
       if(nextDirection===0) return;
       directionDistance=nextDirection===scrollDirection?directionDistance+delta:delta;
+      if(nextDirection>0) {
+        countedCurrentUpwardGesture=false;
+      }
       scrollDirection=nextDirection;
       if(directionDistance>6) player.classList.add('is-compact');
-      if(directionDistance< -6) player.classList.remove('is-compact');
+      if(directionDistance< -6) {
+        if(isHomePage()) {
+          player.classList.remove('is-compact');
+        } else if(!countedCurrentUpwardGesture) {
+          upwardGestures++;
+          countedCurrentUpwardGesture=true;
+          if(upwardGestures>=3) {
+            player.classList.remove('is-compact');
+            upwardGestures=0;
+          }
+        }
+      }
     },{passive:true});
+    player.addEventListener('click',()=>{
+      player.classList.remove('is-compact');
+      upwardGestures=0;
+    });
+    document.addEventListener('astro:page-load',resetScrollState);
   }
   if(audio instanceof HTMLAudioElement && select instanceof HTMLSelectElement) {
     const loadTrack=(index, shouldPlay=false)=>{
