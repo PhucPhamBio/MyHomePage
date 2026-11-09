@@ -1,74 +1,135 @@
-<aside class="music-player" aria-label="Chopin music player" transition:persist="chopin-player">
+---
+const tracks = [
+  {
+    title: 'Nocturne Op. 9 No. 2 in E-flat major',
+    src: 'https://upload.wikimedia.org/wikipedia/commons/5/50/Nocturne_Op._9_no._2_in_E_flat_major.mp3',
+    page: 'https://commons.wikimedia.org/wiki/File:Nocturne_Op._9_no._2_in_E_flat_major.mp3'
+  },
+  {
+    title: 'Nocturne Op. 9 No. 1 in B-flat minor',
+    src: 'https://upload.wikimedia.org/wikipedia/commons/b/b0/NocturneOp.9No.1InBFlatMinor.mp3',
+    page: 'https://commons.wikimedia.org/wiki/File:NocturneOp.9No.1InBFlatMinor.mp3'
+  },
+  {
+    title: 'Nocturne Op. 27 No. 2 in D-flat major',
+    src: 'https://upload.wikimedia.org/wikipedia/commons/3/3f/NocturneOp27No2.mp3',
+    page: 'https://commons.wikimedia.org/wiki/File:NocturneOp27No2.mp3'
+  },
+  {
+    title: 'Nocturne Op. 48 No. 1 in C minor',
+    src: 'https://upload.wikimedia.org/wikipedia/commons/3/3c/Nocturne_Op._48_no._1_in_C_minor.mp3',
+    page: 'https://commons.wikimedia.org/wiki/File:Nocturne_Op._48_no._1_in_C_minor.mp3'
+  },
+  {
+    title: 'Prelude Op. 28 No. 15, “Raindrop”',
+    src: 'https://upload.wikimedia.org/wikipedia/commons/f/fc/Prelude_Op._28_no._15.mp3',
+    page: 'https://commons.wikimedia.org/wiki/File:Prelude_Op._28_no._15.mp3'
+  },
+  {
+    title: 'Prelude Op. 28 No. 6 in B minor',
+    src: 'https://upload.wikimedia.org/wikipedia/commons/6/6d/Prelude_Op._28_no._6.mp3',
+    page: 'https://commons.wikimedia.org/wiki/File:Prelude_Op._28_no._6.mp3'
+  },
+  {
+    title: 'Ballade No. 1 in G minor, Op. 23',
+    src: 'https://upload.wikimedia.org/wikipedia/commons/6/61/Chopin_Ballade_no._1_in_G_minor%2C_Op._23_Frank_L%C3%A9vy.mp3',
+    page: 'https://commons.wikimedia.org/wiki/File:Chopin_Ballade_no._1_in_G_minor,_Op._23_Frank_L%C3%A9vy.mp3'
+  },
+  {
+    title: 'Fantaisie-Impromptu in C-sharp minor, Op. 66',
+    src: 'https://upload.wikimedia.org/wikipedia/commons/2/2b/Fantaisie_Impromptu_Op._66.mp3',
+    page: 'https://commons.wikimedia.org/wiki/File:Fantaisie_Impromptu_Op._66.mp3'
+  },
+  {
+    title: 'Waltz in E minor, B. 56',
+    src: 'https://upload.wikimedia.org/wikipedia/commons/2/22/Chopin_-_Waltz_in_E_minor,_B_56.mp3',
+    page: 'https://commons.wikimedia.org/wiki/File:Chopin_-_Waltz_in_E_minor,_B_56.mp3'
+  },
+  {
+    title: 'Impromptu No. 1 in A-flat major, Op. 29',
+    src: 'https://upload.wikimedia.org/wikipedia/commons/9/9a/Impromptu_no._1_-_Op._29.mp3',
+    page: 'https://commons.wikimedia.org/wiki/File:Impromptu_no._1_-_Op._29.mp3'
+  }
+];
+---
+<aside class="music-player" aria-label="Danh sách nhạc Frédéric Chopin" transition:persist="chopin-playlist">
   <div class="track">
     <span class="music-note" aria-hidden="true">♫</span>
-    <div>
-      <p class="track-title">Chopin · Nocturne Op. 9 No. 2</p>
-      <a href="https://commons.wikimedia.org/wiki/File:Nocturne_Op._9_no._2_in_E_flat_major.mp3">Wikimedia Commons · CC0</a>
-      <p class="playback-hint" hidden>Trình duyệt đã chặn tự phát. Nhấn Play để nghe.</p>
+    <div class="track-info">
+      <p class="track-title">{tracks[0].title}</p>
+      <a class="source-link" href={tracks[0].page} target="_blank" rel="noopener noreferrer">Wikimedia Commons ↗</a>
     </div>
   </div>
-  <audio controls autoplay preload="none" aria-label="Play Chopin, Nocturne Op. 9 No. 2">
-    <source src="https://upload.wikimedia.org/wikipedia/commons/5/50/Nocturne_Op._9_no._2_in_E_flat_major.mp3" type="audio/mpeg" />
-    Your browser does not support audio playback.
+  <label class="playlist-label" for="chopin-track">Frédéric Chopin</label>
+  <div class="playlist-controls">
+    <button class="track-step" type="button" data-step="-1" aria-label="Bài trước">‹</button>
+    <select id="chopin-track" aria-label="Chọn bản nhạc Chopin">
+      {tracks.map((track, index) => <option value={index} data-src={track.src} data-page={track.page}>{index + 1}. {track.title}</option>)}
+    </select>
+    <button class="track-step" type="button" data-step="1" aria-label="Bài tiếp theo">›</button>
+  </div>
+  <audio controls autoplay preload="auto" aria-label={`Phát ${tracks[0].title}`}>
+    <source src={tracks[0].src} type="audio/mpeg" />
+    Trình duyệt của bạn không hỗ trợ phát MP3.
   </audio>
 </aside>
 
 <script is:inline>
   const player=document.querySelector('.music-player');
   const audio=player?.querySelector('audio');
-  const hint=player?.querySelector('.playback-hint');
+  const select=player?.querySelector('#chopin-track');
   const title=player?.querySelector('.track-title');
-  const sourceLink=player?.querySelector('.track a');
-  const tracks=[
-    {
-      title:'Chopin · Nocturne Op. 9 No. 2',
-      src:'https://upload.wikimedia.org/wikipedia/commons/5/50/Nocturne_Op._9_no._2_in_E_flat_major.mp3',
-      page:'https://commons.wikimedia.org/wiki/File:Nocturne_Op._9_no._2_in_E_flat_major.mp3'
-    },
-    {
-      title:'Chopin · Nocturne Op. 9 No. 1',
-      src:'https://upload.wikimedia.org/wikipedia/commons/b/b0/NocturneOp.9No.1InBFlatMinor.mp3',
-      page:'https://commons.wikimedia.org/wiki/File:NocturneOp.9No.1InBFlatMinor.mp3'
-    },
-    {
-      title:'Chopin · Nocturne Op. 27 No. 2',
-      src:'https://upload.wikimedia.org/wikipedia/commons/3/3f/NocturneOp27No2.mp3',
-      page:'https://commons.wikimedia.org/wiki/File:NocturneOp27No2.mp3'
-    }
-  ];
-  let currentTrack=0;
-  const playAudio=()=>{
-    audio?.play().catch(error=>{
-      if(error.name==='NotAllowedError') {
-        if(hint) hint.hidden=false;
-        return;
-      }
-      console.error('Unable to play the Chopin recording.',error);
-    });
-  };
-  if(audio instanceof HTMLAudioElement) {
-    audio.addEventListener('ended',()=>{
-      currentTrack=(currentTrack+1)%tracks.length;
-      const nextTrack=tracks[currentTrack];
-      if(title) title.textContent=nextTrack.title;
-      if(sourceLink) sourceLink.href=nextTrack.page;
-      audio.setAttribute('aria-label',`Play ${nextTrack.title.replace('Chopin · ','')}`);
-      audio.src=nextTrack.src;
+  const sourceLink=player?.querySelector('.source-link');
+  const status=player?.querySelector('.playback-status');
+  if(audio instanceof HTMLAudioElement && select instanceof HTMLSelectElement) {
+    const loadTrack=(index, shouldPlay=false)=>{
+      const resumePlayback=shouldPlay||!audio.paused;
+      select.selectedIndex=(index+select.options.length)%select.options.length;
+      const option=select.options[select.selectedIndex];
+      audio.src=option.dataset.src;
+      audio.setAttribute('aria-label',`Phát ${option.textContent?.replace(/^\d+\.\s*/,'')}`);
+      if(title) title.textContent=option.textContent?.replace(/^\d+\.\s*/,'') ?? '';
+      if(sourceLink) sourceLink.href=option.dataset.page ?? '';
+      if(status) status.textContent='Đã chọn bài. Nhấn Play để bắt đầu nghe.';
       audio.load();
-      playAudio();
+      if(resumePlayback) {
+        audio.play().catch(error=>{
+          if(status) status.textContent='Hãy nhấn Play trên thanh điều khiển để nghe.';
+          if(error.name!=='NotAllowedError') console.error('Không thể phát bản thu Chopin.',error);
+        });
+      }
+    };
+    select.addEventListener('change',()=>loadTrack(select.selectedIndex));
+    player?.querySelectorAll('[data-step]').forEach(button=>{
+      button.addEventListener('click',()=>loadTrack(select.selectedIndex+Number(button.dataset.step)));
     });
-    audio.addEventListener('play',()=>{if(hint) hint.hidden=true;});
-    playAudio();
+    audio.addEventListener('playing',()=>{if(status) status.textContent='Đang phát.';});
+    audio.addEventListener('pause',()=>{if(status && !audio.ended) status.textContent='Đã tạm dừng.';});
+    audio.addEventListener('ended',()=>loadTrack(select.selectedIndex+1,true));
+    audio.addEventListener('error',()=>{
+      if(status) status.textContent='Không tải được bản thu này. Hãy thử bài khác hoặc mở liên kết bản thu.';
+    });
+    audio.play().catch(error=>{
+      if(status) status.textContent='Trình duyệt đã chặn tự phát. Nhấn Play để nghe.';
+      if(error.name!=='NotAllowedError') console.error('Không thể tự phát bản thu Chopin.',error);
+    });
   }
 </script>
 
 <style>
-  .music-player{position:fixed;right:1rem;bottom:1rem;z-index:20;width:min(330px,calc(100vw - 2rem));padding:.85rem 1rem;border:1px solid var(--line);border-radius:14px;background:color-mix(in srgb,var(--paper) 94%,transparent);color:var(--ink);box-shadow:0 12px 36px #0003;backdrop-filter:blur(14px)}
-  .track{display:flex;align-items:center;gap:.7rem;margin-bottom:.6rem}
-  .music-note{font-size:1.5rem;color:var(--blue)}
+  .music-player{position:fixed;right:1rem;bottom:1rem;z-index:20;width:min(360px,calc(100vw - 2rem));padding:.75rem;border:1px solid color-mix(in srgb,var(--line) 75%,transparent);border-radius:14px;background:color-mix(in srgb,var(--paper) 72%,transparent);color:var(--ink);box-shadow:0 8px 24px #0002;backdrop-filter:blur(14px);opacity:.78;transition:opacity .2s ease}
+  .music-player:hover,.music-player:focus-within{opacity:1}
+  .track{display:flex;align-items:center;gap:.7rem;margin:0 0 .55rem}
+  .music-note{font-size:1.35rem;color:var(--muted)}
+  .track-info{min-width:0}
   .track-title{margin:0;font-size:.8rem;font-weight:700}
-  .track a{font-size:.65rem;color:var(--muted);text-decoration:underline;text-underline-offset:2px}
-  .playback-hint{margin:.25rem 0 0;font-size:.65rem;color:var(--muted)}
+  .source-link{font-size:.65rem;color:var(--muted);text-decoration:underline;text-underline-offset:2px}
+  .playlist-label{display:block;margin:0 0 .25rem;color:var(--muted);font:500 .65rem "DM Mono",monospace;text-transform:uppercase;letter-spacing:.06em}
+  .playlist-controls{display:flex;align-items:center;gap:.4rem;margin-bottom:.5rem}
+  .track-step{flex:0 0 2rem;width:2rem;height:2rem;border:1px solid var(--line);border-radius:50%;background:transparent;color:var(--ink);font:1.25rem Manrope,system-ui,sans-serif;cursor:pointer}
+  .track-step:hover{background:var(--ink);color:var(--paper)}
+  select{min-width:0;flex:1;padding:.4rem;border:1px solid var(--line);border-radius:6px;background:var(--paper);color:var(--ink);font:500 .7rem Manrope,system-ui,sans-serif}
   audio{display:block;width:100%;height:36px}
-  @media(max-width:500px){.music-player{right:.75rem;bottom:.75rem;width:min(310px,calc(100vw - 1.5rem));padding:.7rem .8rem}}
+  .playback-status{margin:.35rem 0 0;color:var(--muted);font-size:.65rem}
+  @media(max-width:500px){.music-player{right:.75rem;bottom:.75rem;width:min(340px,calc(100vw - 1.5rem));padding:.65rem}}
 </style>
