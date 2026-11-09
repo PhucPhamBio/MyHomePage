@@ -1,10 +1,12 @@
 ---
+import dragonLogo from '../images/dragon.png';
+
 const base = import.meta.env.BASE_URL;
 const link = (path='') => `${base}${path}`.replace(/\/+/g,'/');
 ---
 <header class="header">
   <a class="skip" href="#content">Skip to content</a>
-  <div class="shell top"><a class="brand" href={link()}><span>PHUC PHAM</span><b></b></a><div class="issue mono">BIOLOGICAL INTELLIGENCE</div></div>
+  <div class="shell top"><a class="brand" href={link()} aria-label="Phuc Pham home"><img src={dragonLogo.src} alt="Phuc Pham" width="48" height="48" /></a><div class="issue mono">BIOLOGICAL INTELLIGENCE</div></div>
   <div class="shell navwrap"><nav aria-label="Primary"><a href={link('blog/')}>Essays</a><a href={link('topics/computational-biology/')}>Computational Biology</a><a href={link('topics/other/')}>Other Topics</a><a href={link('about/')}>About</a></nav><button id="theme" type="button" aria-label="Switch to light mode" aria-pressed="false"><span aria-hidden="true">☼</span><span class="theme-label">Light mode</span></button></div>
 </header>
 <script is:inline>
@@ -43,5 +45,5 @@ const link = (path='') => `${base}${path}`.replace(/\/+/g,'/');
   }
 </script>
 <style>
-.header{border-bottom:1px solid var(--ink)}.top{height:88px;display:flex;align-items:center;justify-content:space-between}.brand{font-size:1.2rem;font-weight:800;letter-spacing:-.04em}.brand span{background:#123c78;color:#fff;padding:.25rem .4rem}.brand b{margin-left:.4rem}.issue{font-size:.7rem}.navwrap{display:flex;align-items:center;justify-content:space-between;gap:.75rem;border-top:1px solid var(--line);height:47px}nav{display:flex;flex:1;min-width:0;gap:2rem;font-size:.78rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;white-space:nowrap}nav a{flex:0 0 auto}nav a:hover{text-decoration:underline;text-underline-offset:5px}button{flex:0 0 auto;border:1px solid var(--line);border-radius:999px;background:color-mix(in srgb,var(--paper) 80%,transparent);color:var(--ink);padding:.35rem .7rem;display:flex;align-items:center;gap:.4rem;font:600 .72rem Manrope,system-ui,sans-serif;cursor:pointer;transition:background .2s,color .2s}button:hover{background:var(--ink);color:var(--paper)}button span[aria-hidden]{font-size:1rem}.theme-label{white-space:nowrap}@media(max-width:720px){.issue{display:none}.top{height:70px}nav{gap:1rem;overflow-x:auto;overscroll-behavior-x:contain;scrollbar-width:none;font-size:.68rem}nav::-webkit-scrollbar{display:none}.navwrap{height:52px}.brand{font-size:1rem}}@media(max-width:380px){nav{gap:.75rem;font-size:.62rem}.theme-label{display:none}}
+.header{border-bottom:1px solid var(--ink)}.top{height:88px;display:flex;align-items:center;justify-content:space-between}.brand{display:inline-flex;align-items:center;flex:0 0 auto}.brand img{display:block;width:48px;height:48px;object-fit:contain}.issue{font-size:.7rem}.navwrap{display:flex;align-items:center;justify-content:space-between;gap:.75rem;border-top:1px solid var(--line);height:47px}nav{display:flex;flex:1;min-width:0;gap:2rem;font-size:.78rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;white-space:nowrap}nav a{flex:0 0 auto}nav a:hover{text-decoration:underline;text-underline-offset:5px}button{flex:0 0 auto;border:1px solid var(--line);border-radius:999px;background:color-mix(in srgb,var(--paper) 80%,transparent);color:var(--ink);padding:.35rem .7rem;display:flex;align-items:center;gap:.4rem;font:600 .72rem Manrope,system-ui,sans-serif;cursor:pointer;transition:background .2s,color .2s}button:hover{background:var(--ink);color:var(--paper)}button span[aria-hidden]{font-size:1rem}.theme-label{white-space:nowrap}@media(max-width:720px){.issue{display:none}.top{height:70px}nav{gap:1rem;overflow-x:auto;overscroll-behavior-x:contain;scrollbar-width:none;font-size:.68rem}nav::-webkit-scrollbar{display:none}.navwrap{height:52px}}@media(max-width:380px){nav{gap:.75rem;font-size:.62rem}.theme-label{display:none}}
 </style>
