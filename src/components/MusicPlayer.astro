@@ -52,7 +52,7 @@ const tracks = [
   }
 ];
 ---
-<aside class="music-player" aria-label="Danh sách nhạc Frédéric Chopin" transition:persist="chopin-playlist">
+<aside class="music-player" aria-label="Frédéric Chopin playlist" transition:persist="chopin-playlist">
   <div class="track">
     <span class="music-note" aria-hidden="true">♫</span>
     <div class="track-info">
@@ -62,16 +62,17 @@ const tracks = [
   </div>
   <label class="playlist-label" for="chopin-track">Frédéric Chopin</label>
   <div class="playlist-controls">
-    <button class="track-step" type="button" data-step="-1" aria-label="Bài trước">‹</button>
-    <select id="chopin-track" aria-label="Chọn bản nhạc Chopin">
+    <button class="track-step" type="button" data-step="-1" aria-label="Previous track">‹</button>
+    <select id="chopin-track" aria-label="Choose a Chopin piece">
       {tracks.map((track, index) => <option value={index} data-src={track.src} data-page={track.page}>{index + 1}. {track.title}</option>)}
     </select>
-    <button class="track-step" type="button" data-step="1" aria-label="Bài tiếp theo">›</button>
+    <button class="track-step" type="button" data-step="1" aria-label="Next track">›</button>
   </div>
-  <audio controls autoplay preload="auto" aria-label={`Phát ${tracks[0].title}`}>
+  <audio controls autoplay preload="auto" aria-label={`Play ${tracks[0].title}`}>
     <source src={tracks[0].src} type="audio/mpeg" />
-    Trình duyệt của bạn không hỗ trợ phát MP3.
+    Your browser does not support MP3 playback.
   </audio>
+  <p class="playback-status" role="status">Loading track…</p>
 </aside>
 
 <script is:inline>
@@ -81,21 +82,43 @@ const tracks = [
   const title=player?.querySelector('.track-title');
   const sourceLink=player?.querySelector('.source-link');
   const status=player?.querySelector('.playback-status');
+  if(player && !player.dataset.scrollController) {
+    player.dataset.scrollController='true';
+    let lastScrollY=window.scrollY;
+    let directionDistance=0;
+    let scrollDirection=0;
+    window.addEventListener('scroll',()=>{
+      const currentScrollY=window.scrollY;
+      const delta=currentScrollY-lastScrollY;
+      lastScrollY=currentScrollY;
+      if(currentScrollY<=40) {
+        directionDistance=0;
+        player.classList.remove('is-compact');
+        return;
+      }
+      const nextDirection=Math.sign(delta);
+      if(nextDirection===0) return;
+      directionDistance=nextDirection===scrollDirection?directionDistance+delta:delta;
+      scrollDirection=nextDirection;
+      if(directionDistance>6) player.classList.add('is-compact');
+      if(directionDistance< -6) player.classList.remove('is-compact');
+    },{passive:true});
+  }
   if(audio instanceof HTMLAudioElement && select instanceof HTMLSelectElement) {
     const loadTrack=(index, shouldPlay=false)=>{
       const resumePlayback=shouldPlay||!audio.paused;
       select.selectedIndex=(index+select.options.length)%select.options.length;
       const option=select.options[select.selectedIndex];
       audio.src=option.dataset.src;
-      audio.setAttribute('aria-label',`Phát ${option.textContent?.replace(/^\d+\.\s*/,'')}`);
+      audio.setAttribute('aria-label',`Play ${option.textContent?.replace(/^\d+\.\s*/,'')}`);
       if(title) title.textContent=option.textContent?.replace(/^\d+\.\s*/,'') ?? '';
       if(sourceLink) sourceLink.href=option.dataset.page ?? '';
-      if(status) status.textContent='Đã chọn bài. Nhấn Play để bắt đầu nghe.';
+      if(status) status.textContent='Track selected. Press Play to listen.';
       audio.load();
       if(resumePlayback) {
         audio.play().catch(error=>{
-          if(status) status.textContent='Hãy nhấn Play trên thanh điều khiển để nghe.';
-          if(error.name!=='NotAllowedError') console.error('Không thể phát bản thu Chopin.',error);
+          if(status) status.textContent='Press Play on the audio controls to listen.';
+          if(error.name!=='NotAllowedError') console.error('Unable to play the Chopin recording.',error);
         });
       }
     };
@@ -103,21 +126,26 @@ const tracks = [
     player?.querySelectorAll('[data-step]').forEach(button=>{
       button.addEventListener('click',()=>loadTrack(select.selectedIndex+Number(button.dataset.step)));
     });
-    audio.addEventListener('playing',()=>{if(status) status.textContent='Đang phát.';});
-    audio.addEventListener('pause',()=>{if(status && !audio.ended) status.textContent='Đã tạm dừng.';});
+    audio.addEventListener('playing',()=>{if(status) status.textContent='Now playing.';});
+    audio.addEventListener('pause',()=>{if(status && !audio.ended) status.textContent='Paused.';});
     audio.addEventListener('ended',()=>loadTrack(select.selectedIndex+1,true));
     audio.addEventListener('error',()=>{
-      if(status) status.textContent='Không tải được bản thu này. Hãy thử bài khác hoặc mở liên kết bản thu.';
+      if(status) status.textContent='Unable to load this recording. Try another track or open the source link.';
     });
     audio.play().catch(error=>{
-      if(status) status.textContent='Trình duyệt đã chặn tự phát. Nhấn Play để nghe.';
-      if(error.name!=='NotAllowedError') console.error('Không thể tự phát bản thu Chopin.',error);
+      if(status) status.textContent='Autoplay was blocked by your browser. Press Play to listen.';
+      if(error.name!=='NotAllowedError') console.error('Unable to autoplay the Chopin recording.',error);
     });
   }
 </script>
 
 <style>
-  .music-player{position:fixed;right:1rem;bottom:1rem;z-index:20;width:min(360px,calc(100vw - 2rem));padding:.75rem;border:1px solid color-mix(in srgb,var(--line) 75%,transparent);border-radius:14px;background:color-mix(in srgb,var(--paper) 72%,transparent);color:var(--ink);box-shadow:0 8px 24px #0002;backdrop-filter:blur(14px);opacity:.78;transition:opacity .2s ease}
+  .music-player{position:fixed;right:1rem;bottom:1rem;z-index:20;width:min(360px,calc(100vw - 2rem));padding:.75rem;border:1px solid color-mix(in srgb,var(--line) 75%,transparent);border-radius:14px;background:color-mix(in srgb,var(--paper) 72%,transparent);color:var(--ink);box-shadow:0 8px 24px #0002;backdrop-filter:blur(14px);opacity:.78;transition:width .25s ease,padding .25s ease,opacity .2s ease}
+  .music-player.is-compact{width:min(220px,calc(100vw - 2rem));padding:.45rem .65rem}
+  .music-player.is-compact .music-note,.music-player.is-compact .source-link,.music-player.is-compact .playlist-label,.music-player.is-compact .playlist-controls,.music-player.is-compact audio,.music-player.is-compact .playback-status{display:none}
+  .music-player.is-compact .track{margin:0}
+  .music-player.is-compact .track-title{display:-webkit-box;overflow:hidden;-webkit-box-orient:vertical;-webkit-line-clamp:2}
+  .music-player:focus-within{width:min(360px,calc(100vw - 2rem));padding:.75rem}
   .music-player:hover,.music-player:focus-within{opacity:1}
   .track{display:flex;align-items:center;gap:.7rem;margin:0 0 .55rem}
   .music-note{font-size:1.35rem;color:var(--muted)}
@@ -131,5 +159,5 @@ const tracks = [
   select{min-width:0;flex:1;padding:.4rem;border:1px solid var(--line);border-radius:6px;background:var(--paper);color:var(--ink);font:500 .7rem Manrope,system-ui,sans-serif}
   audio{display:block;width:100%;height:36px}
   .playback-status{margin:.35rem 0 0;color:var(--muted);font-size:.65rem}
-  @media(max-width:500px){.music-player{right:.75rem;bottom:.75rem;width:min(340px,calc(100vw - 1.5rem));padding:.65rem}}
+  @media(max-width:500px){.music-player{right:.75rem;bottom:.75rem;width:min(340px,calc(100vw - 1.5rem));padding:.65rem}.music-player.is-compact{width:min(200px,calc(100vw - 1.5rem));padding:.4rem .55rem}.music-player:focus-within{width:min(340px,calc(100vw - 1.5rem));padding:.65rem}}
 </style>
