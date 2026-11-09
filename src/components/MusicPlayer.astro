@@ -126,20 +126,23 @@ const tracks = [
         } else if(!countedCurrentUpwardGesture) {
           upwardGestures++;
           countedCurrentUpwardGesture=true;
-          if(upwardGestures>=3) {
+          if(upwardGestures>=5) {
             player.classList.remove('is-compact');
             upwardGestures=0;
           }
         }
       }
     },{passive:true});
-    player.addEventListener('click',()=>{
-      player.classList.remove('is-compact');
+    player.addEventListener('click',event=>{
+      if(isHomePage()) return;
+      if(event.target instanceof Element && event.target.closest('a,button,select,audio')) return;
+      player.classList.toggle('is-compact');
       upwardGestures=0;
     });
     document.addEventListener('astro:page-load',resetScrollState);
   }
   if(audio instanceof HTMLAudioElement && select instanceof HTMLSelectElement) {
+    let hasStartedRandomTrack=false;
     const loadTrack=(index, shouldPlay=false)=>{
       const resumePlayback=shouldPlay||!audio.paused;
       select.selectedIndex=(index+select.options.length)%select.options.length;
@@ -152,7 +155,9 @@ const tracks = [
       audio.load();
       if(resumePlayback) {
         audio.play().catch(error=>{
-          if(status) status.textContent='Press Play on the audio controls to listen.';
+          if(status) status.textContent=error.name==='NotAllowedError'
+            ? 'Autoplay was blocked by your browser. Press Play to listen.'
+            : 'Press Play on the audio controls to listen.';
           if(error.name!=='NotAllowedError') console.error('Unable to play the Chopin recording.',error);
         });
       }
@@ -167,10 +172,16 @@ const tracks = [
     audio.addEventListener('error',()=>{
       if(status) status.textContent='Unable to load this recording. Try another track or open the source link.';
     });
-    audio.play().catch(error=>{
-      if(status) status.textContent='Autoplay was blocked by your browser. Press Play to listen.';
-      if(error.name!=='NotAllowedError') console.error('Unable to autoplay the Chopin recording.',error);
-    });
+    const playRandomTrack=()=>{
+      const trackCount=select.options.length;
+      let index=Math.floor(Math.random()*trackCount);
+      if(hasStartedRandomTrack&&trackCount>1&&index===select.selectedIndex) {
+        index=(index+1+Math.floor(Math.random()*(trackCount-1)))%trackCount;
+      }
+      hasStartedRandomTrack=true;
+      loadTrack(index,true);
+    };
+    playRandomTrack();
   }
 </script>
 
