@@ -1,6 +1,136 @@
 ---
-import { getCollection, render } from 'astro:content';import Base from '../../layouts/Base.astro';import ViewCount from '../../components/ViewCount.astro';
-export async function getStaticPaths(){const posts=await getCollection('blog');return posts.map(post=>({params:{id:post.id},props:{post}}))}
-const {post}=Astro.props;const {Content}=await render(post);
+import { Image } from 'astro:assets';
+import { getCollection, render } from 'astro:content';
+import Base from '../../layouts/Base.astro';
+import ViewCount from '../../components/ViewCount.astro';
+import karateImage from '../../images/four-karate-styles-one-empty-hand.png';
+
+export async function getStaticPaths() {
+  const posts = await getCollection('blog');
+  return posts.map((post) => ({ params: { id: post.id }, props: { post } }));
+}
+
+const { post } = Astro.props;
+const { Content } = await render(post);
+const isKaratePost = post.id === 'four-karate-styles-one-empty-hand';
 ---
-<Base title={`${post.data.title} · Phuc Pham`} description={post.data.description}><article><header class="shell head" style={`--accent:${post.data.accent}`}><div class="meta"><span class="eyebrow">{post.data.category}</span><span class="mono">{post.data.readingTime}</span></div><h1 class="serif">{post.data.title}</h1><p>{post.data.description}</p><div class="byline"><span>By Phuc Pham</span><time>{post.data.publishedAt.toLocaleDateString('en-US',{dateStyle:'long'})}</time><ViewCount mode="increment"/></div></header><div class="shell body"><aside><span class="eyebrow">Filed under</span>{post.data.tags.map((tag:string)=><span>#{tag}</span>)}</aside><div class="prose"><Content/></div></div></article></Base><style>.head{padding:clamp(3rem,8vw,5rem) 0 2rem;border-top:10px solid var(--accent);border-bottom:1px solid var(--ink)}.meta,.byline{display:flex;justify-content:space-between;flex-wrap:wrap;gap:.5rem 1rem}.head h1{font-size:clamp(2.35rem,8vw,7.5rem);line-height:.95;letter-spacing:-.05em;overflow-wrap:anywhere;max-width:1100px;margin:clamp(1.5rem,6vw,3rem) 0 2rem}.head>p{font-size:clamp(1rem,2vw,1.25rem);max-width:750px;color:var(--muted)}.byline{margin-top:clamp(2rem,6vw,4rem);font-size:.8rem;font-weight:700}.body{display:grid;grid-template-columns:220px minmax(0,1fr);gap:clamp(1.5rem,5vw,5rem);padding-top:4rem}.body aside{display:flex;flex-direction:column;gap:.5rem;font-size:.75rem}@media(max-width:750px){.body{grid-template-columns:minmax(0,1fr);gap:1rem;padding-top:2.5rem}.body aside{flex-direction:row;flex-wrap:wrap}}</style>
+
+<Base title={`${post.data.title} · Phuc Pham`} description={post.data.description}>
+  <article>
+    <header class="shell head" style={`--accent:${post.data.accent}`}>
+      <div class="meta">
+        <span class="eyebrow">{post.data.category}</span>
+        <span class="mono">{post.data.readingTime}</span>
+      </div>
+      <h1 class="serif">{post.data.title}</h1>
+      {isKaratePost && (
+        <figure class="hero-figure">
+          <Image
+            src={karateImage}
+            alt="Illustrated overview of Shotokan, Goju-ryu, Shito-ryu, and Wado-ryu karate styles and their shared practice."
+            loading="eager"
+          />
+          <figcaption>Four styles, each with a distinct emphasis, share the fundamentals of karate practice.</figcaption>
+        </figure>
+      )}
+      <p>{post.data.description}</p>
+      <div class="byline">
+        <span>By Phuc Pham</span>
+        <time>{post.data.publishedAt.toLocaleDateString('en-US', { dateStyle: 'long' })}</time>
+        <ViewCount mode="increment" />
+      </div>
+    </header>
+    <div class="shell body">
+      <aside>
+        <span class="eyebrow">Filed under</span>
+        {post.data.tags.map((tag: string) => <span>#{tag}</span>)}
+      </aside>
+      <div class="prose">
+        <Content />
+      </div>
+    </div>
+  </article>
+</Base>
+
+<style>
+  .head {
+    padding: clamp(3rem, 8vw, 5rem) 0 2rem;
+    border-top: 10px solid var(--accent);
+    border-bottom: 1px solid var(--ink);
+  }
+
+  .meta,
+  .byline {
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 0.5rem 1rem;
+  }
+
+  .head h1 {
+    max-width: 1100px;
+    margin: clamp(1.5rem, 6vw, 3rem) 0 2rem;
+    font-size: clamp(2.35rem, 8vw, 7.5rem);
+    line-height: 0.95;
+    letter-spacing: -0.05em;
+    overflow-wrap: anywhere;
+  }
+
+  .head > p {
+    max-width: 750px;
+    color: var(--muted);
+    font-size: clamp(1rem, 2vw, 1.25rem);
+  }
+
+  .hero-figure {
+    max-width: 980px;
+    margin: 0 0 1.5rem;
+  }
+
+  .hero-figure img {
+    display: block;
+    width: 100%;
+    height: auto;
+    border: 1px solid var(--line);
+    border-radius: 0.85rem;
+  }
+
+  .hero-figure figcaption {
+    margin-top: 0.55rem;
+    color: var(--muted);
+    font: 500 0.75rem/1.5 "DM Mono", monospace;
+  }
+
+  .byline {
+    margin-top: clamp(2rem, 6vw, 4rem);
+    font-size: 0.8rem;
+    font-weight: 700;
+  }
+
+  .body {
+    display: grid;
+    grid-template-columns: 220px minmax(0, 1fr);
+    gap: clamp(1.5rem, 5vw, 5rem);
+    padding-top: clamp(2rem, 5vw, 4rem);
+  }
+
+  .body aside {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    font-size: 0.75rem;
+  }
+
+  @media (max-width: 750px) {
+    .body {
+      grid-template-columns: minmax(0, 1fr);
+      gap: 1rem;
+      padding-top: 2rem;
+    }
+
+    .body aside {
+      flex-direction: row;
+      flex-wrap: wrap;
+    }
+  }
+</style>

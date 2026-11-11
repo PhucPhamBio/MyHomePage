@@ -5,7 +5,7 @@ import MusicPlayer from '../components/MusicPlayer.astro';
 import { ClientRouter } from 'astro:transitions';
 import dnaAnalysisIcon from '../images/letterp.png';
 import '../styles/global.css';
-const { title='Phuc Pham', description='An independent magazine about biological intelligence, medicine, nations, and martial arts.' } = Astro.props;
+const { title='Phuc Pham', description='A personal space where Phuc Pham share what he learn, what he explore, and how he see the world.' } = Astro.props;
 const canonical = Astro.site ? new URL(Astro.url.pathname, Astro.site) : undefined;
 ---
 <!doctype html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width"><meta name="description" content={description}><meta name="generator" content={Astro.generator}><link rel="icon" type="image/png" href={dnaAnalysisIcon.src}/>{canonical && <link rel="canonical" href={canonical}/>}<meta property="og:title" content={title}><meta property="og:description" content={description}><meta property="og:type" content="website"><title>{title}</title><script is:inline>

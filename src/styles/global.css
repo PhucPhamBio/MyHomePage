@@ -28,4 +28,5 @@ img{max-width:100%}
 .prose pre{padding:1rem;background:color-mix(in srgb,var(--ink) 8%,transparent)}
 .prose pre code{overflow-wrap:normal}
 .prose img,.prose video,.prose iframe{max-width:100%;height:auto}
+.prose img{display:block;width:100%;border:1px solid var(--line);border-radius:.85rem;margin:2rem auto .5rem}
 @media(max-width:720px){.prose{font-size:1.1rem}.prose blockquote{padding-left:.9rem}}
