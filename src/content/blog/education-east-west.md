@@ -23,6 +23,11 @@ Neither “Western” nor “Eastern” education is a single philosophy. Socrat
 The useful question is not which side has the superior philosophy. It is which educational practices develop knowledge, judgment, independence, and character without sacrificing one for another.
 <br /><br />
 
+![Education illustration connecting Eastern and Western traditions through teaching, dialogue, creativity, discipline, and shared human potential.](../../images/education-should-not-have-to-choose-between-east-and-west.png)
+
+*A richer education brings knowledge, discipline, creativity, and independence together.*
+<br /><br />
+
 ## Active learning still requires serious teaching
 <br /><br />
 

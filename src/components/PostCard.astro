@@ -3,6 +3,7 @@ import { Image } from 'astro:assets';
 import type { ImageMetadata } from 'astro';
 import ViewCount from './ViewCount.astro';
 import digitalTwinImage from '../images/digital-twins-is-not-just-a-model-of-patent.png';
+import educationImage from '../images/education-should-not-have-to-choose-between-east-and-west.png';
 import karateImage from '../images/four-karate-styles-one-empty-hand.png';
 import virtualCellImage from '../images/how-to-build-virtual-cell.png';
 import precisionMedicineImage from '../images/precision-medicine.png';
@@ -26,6 +27,10 @@ const cardImages: Record<string, { image: ImageMetadata; alt: string }> = {
   'precision-medicine': {
     image: precisionMedicineImage,
     alt: 'Precision medicine infographic showing patient data, clinical decisions, and ongoing learning.'
+  },
+  'education-east-west': {
+    image: educationImage,
+    alt: 'Education illustration connecting Eastern and Western traditions through teaching, dialogue, creativity, discipline, and shared human potential.'
   },
   'four-karate-styles-one-empty-hand': {
     image: karateImage,
